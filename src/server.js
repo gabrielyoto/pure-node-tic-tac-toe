@@ -34,7 +34,6 @@ const montarTabela = (res) => {
 
   res.write(JSON.stringify(game));
   res.end();
-  nextSymbol = nextSymbol === Symbols.X ? Symbols.O : Symbols.X;
 };
 
 const carregarPagina = (res) => {
@@ -56,6 +55,7 @@ const modifyGame = (newSymbol) => {
   const { i, j } = newSymbol;
 
   game[i][j] = nextSymbol;
+  nextSymbol = nextSymbol === Symbols.X ? Symbols.O : Symbols.X;
 };
 
 http
