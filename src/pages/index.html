@@ -30,14 +30,23 @@
       rows[1] = new Array(3).fill(null);
       rows[2] = new Array(3).fill(null);
 
-      rows.forEach((row, rowIndex) => {
-        row.forEach((symbol, cellIndex) => {
-          console.log((rowIndex * 3 + cellIndex + 1).toString());
-          const cell = document.getElementById((rowIndex * 3 + cellIndex + 1).toString());
+      setInterval(() => {
+        const xhttp = new XMLHttpRequest();
+        xhttp.open('get', 'status');
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4) {
+            const rows = JSON.parse(this.responseText);
 
-          cell.innerHTML = rowIndex;
-        });
-      });
+            rows.forEach((row, rowIndex) => {
+              row.forEach((symbol, cellIndex) => {
+                const cell = document.getElementById((rowIndex * 3 + cellIndex + 1).toString());
+                cell.innerHTML = symbol;
+              });
+            });
+          }
+        };
+        xhttp.send();
+      }, 1000);
     </script>
   </body>
 </html>
