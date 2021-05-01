@@ -6,7 +6,7 @@ const Symbols = {
   O: 'O',
 };
 
-const game = [
+let game = [
   [null, null, null],
   [null, null, null],
   [null, null, null],
@@ -70,6 +70,14 @@ http
         break;
       case '/setSymbol':
         getPostRequest(req, modifyGame);
+        res.end();
+        break;
+      case '/reset':
+        game = [
+          [null, null, null],
+          [null, null, null],
+          [null, null, null],
+        ];
         res.end();
         break;
       default:

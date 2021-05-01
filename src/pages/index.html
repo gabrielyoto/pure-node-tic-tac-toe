@@ -22,7 +22,25 @@
           const xhttp = new XMLHttpRequest();
           xhttp.open('post', 'setSymbol');
           xhttp.send(JSON.stringify({ i, j }));
+          atualizaTabuleiro();
         }
+      };
+
+      const atualizaTabuleiro = () => {
+        const xhttp = new XMLHttpRequest();
+        xhttp.open('get', 'status');
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4) {
+            const rows = JSON.parse(this.responseText);
+            rows.forEach((row, rowIndex) => {
+              row.forEach((symbol, cellIndex) => {
+                const cell = document.getElementById((rowIndex * 3 + cellIndex + 1).toString());
+                cell.innerHTML = symbol;
+              });
+            });
+          }
+        };
+        xhttp.send();
       };
     </script>
     <table>
@@ -42,28 +60,16 @@
         <td class="cell" id="9" onclick="changeGame(2, 2)"></td>
       </tr>
     </table>
+    <button id="reset">RESET</button>
     <script>
-      const rows = [];
-      rows[0] = new Array(3).fill(null);
-      rows[1] = new Array(3).fill(null);
-      rows[2] = new Array(3).fill(null);
+      setInterval(atualizaTabuleiro, 1000);
 
-      setInterval(() => {
+      document.getElementById('reset').addEventListener('click', () => {
         const xhttp = new XMLHttpRequest();
-        xhttp.open('get', 'status');
-        xhttp.onreadystatechange = function () {
-          if (this.readyState == 4) {
-            const rows = JSON.parse(this.responseText);
-            rows.forEach((row, rowIndex) => {
-              row.forEach((symbol, cellIndex) => {
-                const cell = document.getElementById((rowIndex * 3 + cellIndex + 1).toString());
-                cell.innerHTML = symbol;
-              });
-            });
-          }
-        };
+        xhttp.open('put', 'reset');
         xhttp.send();
-      }, 1000);
+        atualizaTabuleiro();
+      });
     </script>
   </body>
 </html>
