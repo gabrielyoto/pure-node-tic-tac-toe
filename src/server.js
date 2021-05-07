@@ -13,8 +13,10 @@ let game = [
 ];
 
 let nextSymbol = Symbols.X;
+let winner = undefined;
 
 const getPostRequest = (req, action) => {
+  if (winner) return;
   let body = '';
 
   req.on('data', function (data) {
@@ -32,7 +34,22 @@ const getPostRequest = (req, action) => {
 const montarTabela = (res) => {
   res.writeHead(200, { 'Content-Type': 'application/json;' });
 
-  res.write(JSON.stringify(game));
+  for (let i = 0; i < 3; i++) {
+    if (game[i][0] === game[i][1] && game[i][0] === game[i][2]) {
+      winner = game[i][0];
+
+      break;
+    }
+    for (let j = 0; j < 3; j++) {
+      if (game[0][j] === game[1][j] && game[0][j] === game[2][j]) {
+        winner = game[0][j];
+
+        break;
+      }
+    }
+  }
+
+  res.write(JSON.stringify({ game, winner }));
   res.end();
 };
 
@@ -78,6 +95,7 @@ http
           [null, null, null],
           [null, null, null],
         ];
+        winner = null;
         res.end();
         break;
       default:

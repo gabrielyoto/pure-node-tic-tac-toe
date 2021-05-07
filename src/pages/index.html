@@ -17,6 +17,7 @@
   </head>
   <body>
     <script>
+      let winner = null;
       const changeGame = (i, j) => {
         if (document.getElementById((i * 3 + j + 1).toString()).innerHTML === '') {
           const xhttp = new XMLHttpRequest();
@@ -31,7 +32,13 @@
         xhttp.open('get', 'status');
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4) {
-            const rows = JSON.parse(this.responseText);
+            const rows = JSON.parse(this.responseText).game;
+            if (JSON.parse(this.responseText).winner) {
+              winner = JSON.parse(this.responseText).winner;
+              if (document.getElementById('winner')) {
+                document.getElementById('winner').innerHTML = winner;
+              }
+            }
             rows.forEach((row, rowIndex) => {
               row.forEach((symbol, cellIndex) => {
                 const cell = document.getElementById((rowIndex * 3 + cellIndex + 1).toString());
@@ -60,6 +67,7 @@
         <td class="cell" id="9" onclick="changeGame(2, 2)"></td>
       </tr>
     </table>
+    <b>Vencedor: <b id="winner"></b></b>
     <button id="reset">RESET</button>
     <script>
       setInterval(atualizaTabuleiro, 1000);
@@ -69,6 +77,9 @@
         xhttp.open('put', 'reset');
         xhttp.send();
         atualizaTabuleiro();
+        if (document.getElementById('winner')) {
+          document.getElementById('winner').innerHTML = '';
+        }
       });
     </script>
   </body>
